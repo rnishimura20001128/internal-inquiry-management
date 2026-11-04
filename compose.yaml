@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    container_name: inquiry-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inquiry_db
+      POSTGRES_USER: inquiry_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      TZ: Asia/Tokyo
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inquiry_user -d inquiry_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
